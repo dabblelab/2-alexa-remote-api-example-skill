@@ -2,9 +2,23 @@
   "interactionModel": {
     "languageModel": {
       "invocationName": "api starter",
+      "types": [],
       "intents": [
         {
-          "name": "GetAstros",
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "GetAstrosIntent",
+          "slots": [],
           "samples": [
             "how many people are in space",
             "how many people are in space now",
@@ -16,15 +30,6 @@
             "how many astronauts are in space now",
             "how many astronauts are currently in space"
           ]
-        },
-        {
-          "name": "AMAZON.StopIntent"
-        },
-        {
-          "name": "AMAZON.CancelIntent"
-        },
-        {
-          "name": "AMAZON.HelpIntent"
         }
       ]
     }

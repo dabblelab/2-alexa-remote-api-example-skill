@@ -1,5 +1,5 @@
 {
-  "skillManifest": {
+  "manifest": {
     "publishingInformation": {
       "locales": {
         "en-US": {
@@ -21,7 +21,7 @@
         }
       },
       "isAvailableWorldwide": true,
-      "testingInstructions": "No special instructions",
+      "testingInstructions": "No special instructions.",
       "category": "EDUCATION_AND_REFERENCE",
       "distributionCountries": []
     },

@@ -1,74 +1,124 @@
-var Alexa = require('alexa-sdk');
-var http = require('http');
+/* eslint-disable  func-names */
+/* eslint-disable  no-console */
 
-exports.handler = function(event, context, callback){
-  var alexa = Alexa.handler(event, context);
-  alexa.registerHandlers(handlers);
-  alexa.execute();
-};
+const Alexa = require('ask-sdk-core');
 
-var handlers = {
-  'LaunchRequest': function () {
-    this.emit('GetAstros');
+const GetAstrosHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'LaunchRequest'
+      || (handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'GetAstrosIntent');
   },
-  'GetAstros': function() {
+  async handle(handlerInput) {
+    let outputSpeech = 'this is the launch handler';
 
-    getAstrosHttp((data) => {
-
-      var outputSpeech = `There are currently ${data.people.length} astronauts in space. `;
-      for (var i=0;i<data.people.length;i++){
-        if (i === 0) {
-          //first record
-          outputSpeech = outputSpeech + 'Their names are: ' + data.people[i].name + ', '
-        } else if (i === data.people.length-1) {
-          //last record
-          outputSpeech = outputSpeech + 'and ' + data.people[i].name + '.'
-        } else {
-          //middle record(s)
-          outputSpeech = outputSpeech + data.people[i].name + ', '
+    await getContent('http://api.open-notify.org/astros.json')
+      .then((response) => {
+        const data = JSON.parse(response);
+        outputSpeech = `There are currently ${data.people.length} astronauts in space. `;
+        for (var i = 0; i < data.people.length; i++) {
+          if (i === 0) {
+            //first record
+            outputSpeech = outputSpeech + 'Their names are: ' + data.people[i].name + ', '
+          } else if (i === data.people.length - 1) {
+            //last record
+            outputSpeech = outputSpeech + 'and ' + data.people[i].name + '.'
+          } else {
+            //middle record(s)
+            outputSpeech = outputSpeech + data.people[i].name + ', '
+          }
         }
-      }
+      })
+      .catch((err) => {
+        outputSpeech = err.message;
+      });
 
-      this.emit(':tell', outputSpeech);
-  }
-);
+    return handlerInput.responseBuilder
+      .speak(outputSpeech)
+      .getResponse();
+
   },
-  'AMAZON.HelpIntent': function () {
-      this.emit(':ask', "What can I help you with?", "How can I help?");
-  },
-  'AMAZON.CancelIntent': function () {
-      this.emit(':tell', "Okay!");
-  },
-  'AMAZON.StopIntent': function () {
-      this.emit(':tell', "Goodbye!");
-  }
 };
 
+const HelpIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
+  },
+  handle(handlerInput) {
+    const speechText = 'You can introduce yourself by telling me your name';
 
-function getAstrosHttp(callback) {
-  //http://api.open-notify.org/astros.json
-  var options = {
-    host: 'api.open-notify.org',
-    port: 80,
-    path: '/astros.json',
-    method: 'GET'
-  };
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .reprompt(speechText)
+      .getResponse();
+  },
+};
 
-  var req = http.request(options, res => {
-      res.setEncoding('utf8');
-      var returnData = "";
+const CancelAndStopIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && (handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent'
+        || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
+  },
+  handle(handlerInput) {
+    const speechText = 'Goodbye!';
 
-      res.on('data', chunk => {
-          returnData = returnData + chunk;
-      });
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .getResponse();
+  },
+};
 
-      res.on('end', () => {
-        var result = JSON.parse(returnData);
+const SessionEndedRequestHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
+  },
+  handle(handlerInput) {
+    console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
 
-        callback(result);
+    return handlerInput.responseBuilder.getResponse();
+  },
+};
 
-      });
+const ErrorHandler = {
+  canHandle() {
+    return true;
+  },
+  handle(handlerInput, error) {
+    console.log(`Error handled: ${error.message}`);
 
-  });
-  req.end();
-}
+    return handlerInput.responseBuilder
+      .speak('Sorry, I can\'t understand the command. Please say again.')
+      .reprompt('Sorry, I can\'t understand the command. Please say again.')
+      .getResponse();
+  },
+};
+
+const getContent = function (url) {
+  return new Promise((resolve, reject) => {
+    const lib = url.startsWith('https') ? require('https') : require('http');
+    const request = lib.get(url, (response) => {
+      if (response.statusCode < 200 || response.statusCode > 299) {
+        reject(new Error('Failed with status code: ' + response.statusCode));
+      }
+      const body = [];
+      response.on('data', (chunk) => body.push(chunk));
+      response.on('end', () => resolve(body.join('')));
+    });
+    request.on('error', (err) => reject(err))
+  })
+};
+
+const skillBuilder = Alexa.SkillBuilders.custom();
+
+exports.handler = skillBuilder
+  .addRequestHandlers(
+    GetAstrosHandler,
+    HelpIntentHandler,
+    CancelAndStopIntentHandler,
+    SessionEndedRequestHandler
+  )
+  .addErrorHandlers(ErrorHandler)
+  .lambda();
+

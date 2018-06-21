@@ -4,16 +4,17 @@
       "skill_id": "",
       "was_cloned": false,
       "merge": {
-        "skillManifest": {
+        "manifest": {
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "skilltemplates-api-starter-alexa"
+                "uri": "ask-custom-dabblelab-api-starter-default"
               }
             }
           }
         }
-      }
+      },
+      "in_skill_products": []
     }
   }
 }
