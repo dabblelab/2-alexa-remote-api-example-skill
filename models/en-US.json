@@ -17,7 +17,7 @@
           "samples": []
         },
         {
-          "name": "GetAstrosIntent",
+          "name": "GetRemoteDataIntent",
           "slots": [],
           "samples": [
             "how many people are in space",
