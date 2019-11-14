@@ -5,6 +5,12 @@
       "types": [],
       "intents": [
         {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": [
+
+          ]
+        },
+        {
           "name": "AMAZON.CancelIntent",
           "samples": []
         },
