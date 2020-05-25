@@ -1,5 +1,5 @@
 {
-  "name": "dabblelab-api-starter",
+  "name": "alexa-remote-api-example-skill",
   "version": "1.0.0",
   "description": "An example Alexa skill that shows how to call an external API",
   "main": "index.js",
