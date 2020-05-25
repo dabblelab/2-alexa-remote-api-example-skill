@@ -5,16 +5,16 @@
         "en-US": {
           "summary": "Provides the total number of astronauts who are currently in space.",
           "examplePhrases": [
-            "Alexa, ask API Starter how many people are in space",
-            "Alexa, ask how many astronauts are in space from API Starter",
-            "Alexa, ask API Starter how many humans are in space now"
+            "Alexa, ask Template Two how many people are in space",
+            "Alexa, open Template Two",
+            "Alexa, start Template Two"
           ],
           "keywords": [
             "space",
             "astronauts",
             "rocket"
           ],
-          "name": "API Starter",
+          "name": "Remote API Example Skill",
           "description": "Guess how many astronauts are currently in space? Know the answer? Alexa does. Just say: Alexa, ask rocket man how many people in space.",
           "smallIconUri": "https://s3.amazonaws.com/cdn.dabblelab.com/img/skill-template-default-sm.png",
           "largeIconUri": "https://s3.amazonaws.com/cdn.dabblelab.com/img/skill-template-default-lg.png"
