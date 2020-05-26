@@ -3,19 +3,19 @@
     "publishingInformation": {
       "locales": {
         "en-US": {
-          "summary": "Provides the total number of astronauts who are currently in space.",
+          "summary": "Sample Short Description",
           "examplePhrases": [
-            "Alexa, ask Template Two how many people are in space",
-            "Alexa, open Template Two",
-            "Alexa, start Template Two"
+            "Alexa open hello world template",
+            "Alexa tell hello world template I am Jeff",
+            "Alexa tell hello world template my name is Peter"
           ],
           "keywords": [
-            "space",
-            "astronauts",
-            "rocket"
+            "keyword1",
+            "keyword2",
+            "keyword3"
           ],
           "name": "Template 2 - Remote API Example",
-          "description": "Guess how many astronauts are currently in space? Know the answer? Alexa does. Just say: Alexa, ask rocket man how many people in space.",
+          "description": "Sample Full Description",
           "smallIconUri": "https://s3.amazonaws.com/cdn.dabblelab.com/img/skill-template-default-sm.png",
           "largeIconUri": "https://s3.amazonaws.com/cdn.dabblelab.com/img/skill-template-default-lg.png"
         }
