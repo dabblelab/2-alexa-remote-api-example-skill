@@ -1,5 +1,5 @@
-/* eslint-disable  func-names */
-/* eslint-disable  no-console */
+/* eslint-disable no-use-before-define */
+/* eslint-disable global-require */
 
 const Alexa = require('ask-sdk-core');
 
@@ -16,28 +16,28 @@ const GetRemoteDataHandler = {
       .then((response) => {
         const data = JSON.parse(response);
         outputSpeech = `There are currently ${data.people.length} astronauts in space. `;
-        for (let i = 0; i < data.people.length; i++) {
+        for (let i = 0; i < data.people.length; i += 1) {
           if (i === 0) {
-            //first record
-            outputSpeech = outputSpeech + 'Their names are: ' + data.people[i].name + ', '
+            // first record
+            outputSpeech = `${outputSpeech}Their names are: ${data.people[i].name}, `;
           } else if (i === data.people.length - 1) {
-            //last record
-            outputSpeech = outputSpeech + 'and ' + data.people[i].name + '.'
+            // last record
+            outputSpeech = `${outputSpeech}and ${data.people[i].name}.`;
           } else {
-            //middle record(s)
-            outputSpeech = outputSpeech + data.people[i].name + ', '
+            // middle record(s)
+            outputSpeech = `${outputSpeech + data.people[i].name}, `;
           }
         }
       })
       .catch((err) => {
-        //set an optional error message here
-        //outputSpeech = err.message;
+        console.log(`ERROR: ${err.message}`);
+        // set an optional error message here
+        // outputSpeech = err.message;
       });
 
     return handlerInput.responseBuilder
       .speak(outputSpeech)
       .getResponse();
-
   },
 };
 
@@ -96,20 +96,18 @@ const ErrorHandler = {
   },
 };
 
-const getRemoteData = function (url) {
-  return new Promise((resolve, reject) => {
-    const client = url.startsWith('https') ? require('https') : require('http');
-    const request = client.get(url, (response) => {
-      if (response.statusCode < 200 || response.statusCode > 299) {
-        reject(new Error('Failed with status code: ' + response.statusCode));
-      }
-      const body = [];
-      response.on('data', (chunk) => body.push(chunk));
-      response.on('end', () => resolve(body.join('')));
-    });
-    request.on('error', (err) => reject(err))
-  })
-};
+const getRemoteData = (url) => new Promise((resolve, reject) => {
+  const client = url.startsWith('https') ? require('https') : require('http');
+  const request = client.get(url, (response) => {
+    if (response.statusCode < 200 || response.statusCode > 299) {
+      reject(new Error(`Failed with status code: ${response.statusCode}`));
+    }
+    const body = [];
+    response.on('data', (chunk) => body.push(chunk));
+    response.on('end', () => resolve(body.join('')));
+  });
+  request.on('error', (err) => reject(err));
+});
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 
@@ -118,8 +116,7 @@ exports.handler = skillBuilder
     GetRemoteDataHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
-    SessionEndedRequestHandler
+    SessionEndedRequestHandler,
   )
   .addErrorHandlers(ErrorHandler)
   .lambda();
-
