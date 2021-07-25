@@ -1,18 +1,31 @@
-# API Starter - Alexa Skill Template
+![Cover Image](./assets/cover.png)
 
-This is an Alexa skill template that provides a simple example of a skill that calls an external API. The API used is the [api.open-notify.org API](http://api.open-notify.org/astros.json) which returns a list of the astronauts currently in space.
+# Using Remote API Data in an Alexa Skill Response
+
+This is an Alexa skill template that shows how to use results from a remote API in an Alexa response. Using data from an external API is common in Alexa skills. But if you're new to building skills, or new to Node.js/JavaScript, using data from an external API can seem tricky. Hopefully the example code in this template helps simplify things.
+
 
 ### Live example
-To try a live example of this skill template, you can enable the [Ground Control Alexa skill](https://www.amazon.com/Dabble-Lab-Ground-Control/dp/B075CWGY1P/ref=sr_1_sc_1?ie=UTF8&qid=1514557483&sr=8-1-spell&keywords=grond+control+alexa+skill). Just say: `Alexa, enable Ground Control` and then `Alexa, open Ground Control`.
+There is a live example of this skill that you can try from your Alexa device. Just enable the [Ground Control Alexa skill](https://www.amazon.com/Dabble-Lab-Ground-Control/dp/B075CWGY1P/ref=sr_1_sc_1?ie=UTF8&qid=1514557483&sr=8-1-spell&keywords=grond+control+alexa+skill). You can do that by saying: `Alexa, enable Ground Control` and then `Alexa, open Ground Control`.
 
-### Using this template
+The skill returns a list of astronauts currently in space. It gets the data from [api.open-notify.org](http://api.open-notify.org/astros.json). However, the code is written so you can easily change it to call a different API.
 
-This template uses the [Alexa Skills Kit SDK 2.0 for Node.js](https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs) and was designed to be used with the [Alexa Skills Kit Command-Line Interface](https://developer.amazon.com/docs/smapi/ask-cli-intro.html) (aka: ASK-CLI). After installing the ASK-CLI you can run the following command to setup a new skill project based on this template.
+### Using this skill template
 
-`$ ask new --url http://skilltemplates.com/templates.json`
+1. If you don't have one already, create an [Amazon Developer account](https://developer.amazon.com/).
 
-After running the previous command you'll see of list of templates to choose from. Pick the template named `API Starter`. This will create a new folder named `./api-starter/` all of the code for the template will be located in that folder.
+2. Click the button below to deploy the code for this skill into your Alexa developer account. 
 
-### Video Tutorial
+    [![Custom badge](https://img.shields.io/endpoint?url=https://badges-shields-io-88j4y07yzimq.runkit.sh)](https://deploy.dabble.dev/deploy/v2/hegv314gqw)
 
-[coming soon]
+3. In the Alexa developer console, set the skill's invocation name.
+
+4. Test the skill with your device or the Alexa simulator.
+
+5. Modify the skill code to call a different API.
+
+### About the code
+
+There are a ton of ways to call an API using NodeJS. In this skill, the `getRemoteData` function in the [index.js](./lambda/custom/index.js) uses the native [http module](https://nodejs.org/api/http.html) or the native [https module](https://nodejs.org/api/https.html) to make an [HTTP GET](https://www.w3schools.com/tags/ref_httpmethods.asp) request to a provided URL. 
+
+There are other node modules that could be used to call an API, like the popular [axios](https://github.com/axios/axios) module. The http/https modules were used here because they are native to NodeJS. However, the axios module can be a lot easier to work with - especially for more complex cases - for example, when you need to get results from multiple endpoints before returning a response.
